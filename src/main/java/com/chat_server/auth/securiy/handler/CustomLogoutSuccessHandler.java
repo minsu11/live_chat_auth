@@ -26,15 +26,13 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
+
+
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("onLogoutSuccess");
-        HttpSession session = request.getSession();
-        session.invalidate();
-        Cookie cookie = new Cookie("JSESSIONID", session.getId());
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        // todo#1 기존의 세션 로그아웃 방식에서 토큰 방식의 로그아웃으로 변경해야함
+
 
     }
 }

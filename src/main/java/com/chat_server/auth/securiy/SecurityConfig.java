@@ -36,15 +36,24 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserAuthService userAuthService;
     private final ObjectMapper objectMapper;
+
+    // security 허용 경로
+    // login 경로 및 refresh 경로만 허용
+    // 그 외의 경로는 허용하지 않음
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests
                         (
                                 authorizeRequests ->
-                                        authorizeRequests.requestMatchers("/login","/api/v1/users/register").permitAll()
+                                        authorizeRequests.requestMatchers("/login").permitAll()
                         )
-                .formLogin(AbstractHttpConfigurer::disable);
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(
+                        logout ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                                .logoutSuccessHandler(logoutSuccessHandler())
+                );
 
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
         userAuthenticationFilter.setFilterProcessesUrl("/login");
