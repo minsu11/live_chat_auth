@@ -1,0 +1,10 @@
+auth:
+  token:
+    access-token:
+      expiration: 1800
+    refresh-token:
+      expiration: 10000
+    key:
+      public-path: classpath:rsa/dev
+      private-path: classpath:rsa/dev
+

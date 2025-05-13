@@ -1,4 +1,38 @@
 spring:
   application:
     name: auth
-    
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306/chat_server?serverTimezone=UTC&characterEncoding=UTF-8
+    dbcp2:
+      max-idle: 5
+      min-idle: 5
+      max-total: 5
+      test-on-borrow: true
+      test-on-return: true
+      test-on-create: true
+
+server:
+  port: 9090
+
+logging:
+  level:
+    root: info
+    com.chat_server: debug
+    org.springframework: info
+    org.springframework.web.filter: debug
+    org.hibernate.SQL: DEBUG
+    # SQL 로그 보기 (선택)
+    io.netty: WARN
+    reactor.netty: WARN
+    org.apache.http: WARN
+
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+
