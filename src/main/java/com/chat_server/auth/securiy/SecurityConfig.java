@@ -4,6 +4,8 @@ import com.chat_server.auth.securiy.handler.CustomFailHandler;
 import com.chat_server.auth.securiy.handler.CustomLogoutSuccessHandler;
 import com.chat_server.auth.securiy.handler.CustomSuccessHandler;
 import com.chat_server.auth.securiy.service.UserAuthService;
+import com.chat_server.auth.user.service.UserLoginService;
+import com.chat_server.auth.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserAuthService userAuthService;
     private final ObjectMapper objectMapper;
+    private final UserLoginService userLoginService;
+    private final String LOGIN_URL = "/api/v1/auth/login";
 
     // security 허용 경로
     // login 경로 및 refresh 경로만 허용
@@ -46,7 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (
                                 authorizeRequests ->
-                                        authorizeRequests.requestMatchers("/login").permitAll()
+                                        authorizeRequests.requestMatchers(LOGIN_URL).permitAll()
                         )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(
@@ -56,7 +60,7 @@ public class SecurityConfig {
                 );
 
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
-        userAuthenticationFilter.setFilterProcessesUrl("/login");
+        userAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
         userAuthenticationFilter.setAuthenticationSuccessHandler(successHandler());
         userAuthenticationFilter.setAuthenticationFailureHandler(failHandler());
         http.addFilterBefore(userAuthenticationFilter, UserAuthenticationFilter.class);
@@ -78,7 +82,7 @@ public class SecurityConfig {
 
     @Bean
     public CustomSuccessHandler successHandler() {
-        return new CustomSuccessHandler(objectMapper);
+        return new CustomSuccessHandler(objectMapper,userLoginService);
     }
 
     @Bean

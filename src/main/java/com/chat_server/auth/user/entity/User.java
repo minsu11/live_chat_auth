@@ -32,9 +32,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name")
-    private String userName;
-
     @Column(name = "user_input_id")
     private String userInputId;
 
@@ -44,6 +41,8 @@ public class User {
     @Column(name = "user_created_at")
     private LocalDateTime userCreatedAt;
 
+    @Column(name="user_uuid")
+    private String userUuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_status_id")

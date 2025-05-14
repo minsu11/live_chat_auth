@@ -1,4 +1,6 @@
-package com.chat_server.auth.securiy.service;
+package com.chat_server.auth.token.service;
+
+import com.chat_server.auth.token.dto.response.TokenPair;
 
 /**
  * packageName    : com.chat_server.auth.securiy.service
@@ -18,7 +20,7 @@ public interface TokenService {
      * @param userId 사용자 고유 ID
      * @return AccessToken, RefreshToken
      */
-    TokenPair generateTokenPair(Long userId);
+    TokenPair generateTokenPair(String userId, String accessTokenJti, String refreshTokenJti );
 
     /**
      * AccessToken만 재발급한다 (RefreshToken 유효성 통과 시).

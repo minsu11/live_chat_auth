@@ -16,6 +16,8 @@ spring:
       test-on-borrow: true
       test-on-return: true
       test-on-create: true
+  profiles:
+    active: dev
 
 server:
   port: 9090

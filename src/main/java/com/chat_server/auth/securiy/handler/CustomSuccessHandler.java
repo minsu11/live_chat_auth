@@ -1,20 +1,20 @@
 package com.chat_server.auth.securiy.handler;
 
 import com.chat_server.auth.common.dto.response.ApiResponse;
+import com.chat_server.auth.securiy.PrincipalUser;
+import com.chat_server.auth.token.dto.response.TokenResponse;
+import com.chat_server.auth.user.service.UserLoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.IOException;
+import java.security.Principal;
 
 /**
  * packageName    : com.chat_server.security.handler
@@ -31,28 +31,27 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
-
+    private final UserLoginService userLoginService;
     // 성공 시
+    // todo#2 token 방식으로 교체
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("onAuthenticationSuccess");
-        if(authentication == null || authentication.getPrincipal() == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication.");
-            return;
+        Object o = authentication.getPrincipal();
+
+        if(o instanceof PrincipalUser) {
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication.");
+//            return;
+            PrincipalUser principal = (PrincipalUser) o;
+
+            TokenResponse tokenResponse = userLoginService.successLogin(principal);
+
+            ApiResponse apiResponse = ApiResponse.success(200, "login success", tokenResponse);
+
+            objectMapper.writeValue(response.getWriter(), apiResponse);
+
         }
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
 
-        HttpSession session = request.getSession(false);
-        if(session == null) {
-            session = request.getSession(true);
-        }
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-
-        ApiResponse apiResponse = ApiResponse.success(200, "login success");
-
-        objectMapper.writeValue(response.getWriter(), apiResponse);
 
     }
 }

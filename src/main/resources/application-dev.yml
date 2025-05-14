@@ -4,7 +4,7 @@ auth:
       expiration: 1800
     refresh-token:
       expiration: 10000
-    key:
-      public-path: classpath:rsa/dev
-      private-path: classpath:rsa/dev
+  key:
+    public-path: classpath:rsa/dev/login_public_key.pem
+    private-path: classpath:rsa/dev/login_private_key.pem
 
