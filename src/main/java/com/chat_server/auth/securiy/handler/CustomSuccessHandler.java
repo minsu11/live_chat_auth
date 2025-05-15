@@ -37,17 +37,21 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("onAuthenticationSuccess");
+        log.info("authentication: {}", authentication.getClass());
         Object o = authentication.getPrincipal();
+        log.info("principal is " + o.toString());
+        log.info("authentication class: {}", authentication.getPrincipal().getClass());
 
         if(o instanceof PrincipalUser) {
 //            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication.");
 //            return;
+            log.info("onAuthenticationSuccess principal");
             PrincipalUser principal = (PrincipalUser) o;
 
             TokenResponse tokenResponse = userLoginService.successLogin(principal);
 
             ApiResponse apiResponse = ApiResponse.success(200, "login success", tokenResponse);
-
+            log.debug("apiResponse: {}", apiResponse);
             objectMapper.writeValue(response.getWriter(), apiResponse);
 
         }

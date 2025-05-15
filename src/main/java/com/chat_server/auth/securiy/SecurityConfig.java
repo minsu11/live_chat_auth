@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -59,8 +60,14 @@ public class SecurityConfig {
                                 .logoutSuccessHandler(logoutSuccessHandler())
                 );
 
+        DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
+        daoProvider.setPasswordEncoder(passwordEncoder());
+        daoProvider.setUserDetailsService(userAuthService);
+        AuthenticationManager manager = new ProviderManager(daoProvider);
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
         userAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
+        userAuthenticationFilter.setAuthenticationManager(manager); // 여기 중요
+
         userAuthenticationFilter.setAuthenticationSuccessHandler(successHandler());
         userAuthenticationFilter.setAuthenticationFailureHandler(failHandler());
         http.addFilterBefore(userAuthenticationFilter, UserAuthenticationFilter.class);
@@ -72,13 +79,13 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userAuthService);
-        return authenticationProvider;
-    }
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//        authenticationProvider.setUserDetailsService(userAuthService);
+//        return authenticationProvider;
+//    }
 
     @Bean
     public CustomSuccessHandler successHandler() {
