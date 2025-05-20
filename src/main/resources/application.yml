@@ -18,6 +18,10 @@ spring:
       test-on-create: true
   profiles:
     active: dev
+  data:
+    redis:
+      port: 6379
+      host: localhost
 
 server:
   port: 9090
@@ -36,5 +40,6 @@ logging:
 
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
 
 
