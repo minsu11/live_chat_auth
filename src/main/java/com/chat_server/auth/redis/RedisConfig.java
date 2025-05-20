@@ -26,12 +26,13 @@ public class RedisConfig {
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         ObjectMapper mapper = new ObjectMapper();
+        StringRedisSerializer serializer = new StringRedisSerializer();
 
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//        redisTemplate.afterPropertiesSet();
+        redisTemplate.setKeySerializer(serializer);
+        redisTemplate.setHashKeySerializer(serializer);
+        redisTemplate.setHashValueSerializer(serializer);
+        redisTemplate.setValueSerializer(serializer);
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
