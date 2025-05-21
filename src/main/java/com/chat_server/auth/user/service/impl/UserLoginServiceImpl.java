@@ -60,9 +60,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         // refresh token redis 저장 시키기
         refreshTokenService.saveRefreshToken(tokenPair.refreshToken(),userUuidResponse.uuid());
-        // access token만 반환 시키기
-        TokenResponse tokenResponse = new TokenResponse(tokenPair.accessToken());
 
-        return tokenResponse;
+        // access token 반환 시키기
+        return new TokenResponse(tokenPair.accessToken());
+
     }
 }
