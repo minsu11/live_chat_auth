@@ -14,7 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
-import java.security.Principal;
+
+import static com.chat_server.auth.common.dto.response.ApiResponse.*;
 
 /**
  * packageName    : com.chat_server.security.handler
@@ -50,7 +51,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
             TokenResponse tokenResponse = userLoginService.successLogin(principal);
 
-            ApiResponse apiResponse = ApiResponse.success(200, "login success", tokenResponse);
+            ApiResponse<TokenResponse> apiResponse = ApiResponse.success(200, "login success", tokenResponse);
+
             log.debug("apiResponse: {}", apiResponse);
             objectMapper.writeValue(response.getWriter(), apiResponse);
 

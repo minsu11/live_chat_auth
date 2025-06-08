@@ -62,6 +62,7 @@ public class TokenServiceImpl implements TokenService {
         return tokenPair;
     }
 
+    //1회성 방법?
     @Override
     public String regenerateAccessToken(String refreshToken) {
         return "";

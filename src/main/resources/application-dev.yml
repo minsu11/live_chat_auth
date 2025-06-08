@@ -1,7 +1,7 @@
 auth:
   token:
     access-token:
-      expiration: 1800
+      expiration: 90
     refresh-token:
       expiration: 10000
   key:
