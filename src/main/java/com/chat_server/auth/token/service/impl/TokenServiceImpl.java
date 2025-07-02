@@ -38,10 +38,9 @@ public class TokenServiceImpl implements TokenService {
         // token
         // rsa 방식으로 할 예정, 지금 당장은 HSA 방식이 편하지만, 추 후에 msa 구조로 확장한다고 가정 했을 땐, secret 키가 유출이 되면은 보안의 위험이 있음
         Date now = new Date();
-        Date accessTokenExpiration = new Date(now.getTime()+ Long.parseLong(tokenConfig.getAccessToken().getExpiration())*1000);
+        Date accessTokenExpiration = new Date(now.getTime()+ tokenConfig.getAccessToken().toMillis());
 
-        Date refreshTokenExpriation = new Date(now.getTime() + Long.parseLong(tokenConfig.getRefreshToken().getExpiration()) * 1000);
-
+        Date refreshTokenExpiration = new Date(now.getTime() + tokenConfig.getRefreshToken().toMillis());
 
         String accessToken = Jwts.builder()
                 .setSubject(userId)
@@ -55,11 +54,11 @@ public class TokenServiceImpl implements TokenService {
                 .setSubject(userId)
                 .setIssuedAt(now)
                 .claim("jti",refreshTokenJti)
-                .setExpiration(refreshTokenExpriation)
+                .setExpiration(refreshTokenExpiration)
                 .signWith(SignatureAlgorithm.RS256, rsaKeyProvider.getPrivateKey())
                 .compact();
-        TokenPair tokenPair = new TokenPair(accessToken, refreshToken);
-        return tokenPair;
+
+        return TokenPair.of(accessToken, refreshToken,accessTokenExpiration,refreshTokenExpiration);
     }
 
     //1회성 방법?

@@ -4,6 +4,7 @@ import com.chat_server.auth.securiy.handler.CustomFailHandler;
 import com.chat_server.auth.securiy.handler.CustomLogoutSuccessHandler;
 import com.chat_server.auth.securiy.handler.CustomSuccessHandler;
 import com.chat_server.auth.securiy.service.UserAuthService;
+import com.chat_server.auth.token.config.TokenConfig;
 import com.chat_server.auth.user.service.UserLoginService;
 import com.chat_server.auth.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,6 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final UserLoginService userLoginService;
     private final String LOGIN_URL = "/api/v1/auth/login";
-
     // security 허용 경로
     // login 경로 및 refresh 경로만 허용
     // 그 외의 경로는 허용하지 않음

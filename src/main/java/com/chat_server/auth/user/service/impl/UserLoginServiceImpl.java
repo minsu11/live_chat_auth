@@ -62,7 +62,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         refreshTokenService.saveRefreshToken(tokenPair.refreshToken(),userUuidResponse.uuid());
 
         // access token 반환 시키기
-        return new TokenResponse(tokenPair.accessToken());
+        return new TokenResponse(tokenPair.accessToken(), tokenPair.accessTokenExpiration());
 
     }
 }

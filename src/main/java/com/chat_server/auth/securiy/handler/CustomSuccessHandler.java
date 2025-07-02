@@ -2,6 +2,7 @@ package com.chat_server.auth.securiy.handler;
 
 import com.chat_server.auth.common.dto.response.ApiResponse;
 import com.chat_server.auth.securiy.PrincipalUser;
+import com.chat_server.auth.token.config.TokenConfig;
 import com.chat_server.auth.token.dto.response.TokenResponse;
 import com.chat_server.auth.user.service.UserLoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ import static com.chat_server.auth.common.dto.response.ApiResponse.*;
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
     private final UserLoginService userLoginService;
+
     // 성공 시
     // todo#2 token 방식으로 교체
     @Override
@@ -43,19 +45,20 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         log.info("principal is " + o.toString());
         log.info("authentication class: {}", authentication.getPrincipal().getClass());
 
-        if(o instanceof PrincipalUser) {
+        if (o instanceof PrincipalUser principal) {
 //            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication.");
 //            return;
             log.info("onAuthenticationSuccess principal");
-            PrincipalUser principal = (PrincipalUser) o;
 
             TokenResponse tokenResponse = userLoginService.successLogin(principal);
 
             ApiResponse<TokenResponse> apiResponse = ApiResponse.success(200, "login success", tokenResponse);
 
             log.debug("apiResponse: {}", apiResponse);
-            objectMapper.writeValue(response.getWriter(), apiResponse);
 
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+            response.setHeader("X-Token-Expires-In", tokenResponse.accessTokenExpiration()); // 초 단위 등
         }
 
 

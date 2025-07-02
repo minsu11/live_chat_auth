@@ -7,4 +7,7 @@ auth:
     key:
       public-path: file:/etc/auth
       private-path: file:/etc/auth
-
+spring:
+  datasource:
+    username: nhn_academy_150
+    password: jJ6oejil!
