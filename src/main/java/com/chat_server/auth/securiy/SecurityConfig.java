@@ -59,11 +59,7 @@ public class SecurityConfig {
                         logout.logoutUrl("/api/v1/auth/logout")
                                 .logoutSuccessHandler(logoutSuccessHandler())
                 );
-//
-//        DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
-//        daoProvider.setPasswordEncoder(passwordEncoder());
-//        daoProvider.setUserDetailsService(userAuthService);
-//        AuthenticationManager manager = new ProviderManager(daoProvider);
+
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
         userAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
         userAuthenticationFilter.setAuthenticationManager(userAuthenticationManager(authenticationConfiguration)); // 등록된 manager 사용
