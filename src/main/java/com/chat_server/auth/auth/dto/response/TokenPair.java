@@ -1,4 +1,4 @@
-package com.chat_server.auth.token.dto.response;
+package com.chat_server.auth.auth.dto.response;
 
 import com.chat_server.auth.util.TimeUtil;
 

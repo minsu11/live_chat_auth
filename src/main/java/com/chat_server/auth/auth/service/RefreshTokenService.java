@@ -1,4 +1,4 @@
-package com.chat_server.auth.token.service;
+package com.chat_server.auth.auth.service;
 
 
 /**
