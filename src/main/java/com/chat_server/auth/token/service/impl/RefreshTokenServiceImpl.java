@@ -42,5 +42,4 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         Duration ttl = Duration.ofSeconds(ttlInSeconds);
         redisTemplate.opsForValue().set(key, refreshToken, ttl);
     }
-
 }

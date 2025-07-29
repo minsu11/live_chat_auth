@@ -14,5 +14,4 @@ package com.chat_server.auth.token.service;
  */
 public interface RefreshTokenService {
     void saveRefreshToken(String refreshToken, String userId);
-
 }
