@@ -76,14 +76,17 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Claims extractClaimsAllowExpired(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(rsaKeyProvider.getPublicKey()) // RSA Public Key
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            return extractClaims(token);
         } catch (ExpiredJwtException e) {
             // 만료가 된 access token을 가지고 와서 subject에 저장된 user id (uuid) 꺼낼 예정
             return e.getClaims();
         }
+    }
+    private Claims extractClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(rsaKeyProvider.getPublicKey()) // RSA Public Key
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
