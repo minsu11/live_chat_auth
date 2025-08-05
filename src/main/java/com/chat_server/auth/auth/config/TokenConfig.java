@@ -1,7 +1,6 @@
-package com.chat_server.auth.token.config;
+package com.chat_server.auth.auth.config;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

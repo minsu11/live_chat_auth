@@ -4,15 +4,12 @@ import com.chat_server.auth.securiy.handler.CustomFailHandler;
 import com.chat_server.auth.securiy.handler.CustomLogoutSuccessHandler;
 import com.chat_server.auth.securiy.handler.CustomSuccessHandler;
 import com.chat_server.auth.securiy.service.UserAuthService;
-import com.chat_server.auth.token.config.TokenConfig;
-import com.chat_server.auth.user.service.UserLoginService;
-import com.chat_server.auth.user.service.UserService;
+import com.chat_server.auth.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,7 +37,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserAuthService userAuthService;
     private final ObjectMapper objectMapper;
-    private final UserLoginService userLoginService;
+    private final AuthService userLoginService;
     private final String LOGIN_URL = "/api/v1/auth/login";
     // security 허용 경로
     // login 경로 및 refresh 경로만 허용

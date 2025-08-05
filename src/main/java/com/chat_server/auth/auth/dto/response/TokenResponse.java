@@ -1,4 +1,4 @@
-package com.chat_server.auth.token.dto.response;
+package com.chat_server.auth.auth.dto.response;
 
 /**
  * packageName    : com.chat_server.auth.token.dto.response
