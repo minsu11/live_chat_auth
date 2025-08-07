@@ -49,6 +49,8 @@ public class SecurityConfig {
                         (
                                 authorizeRequests ->
                                         authorizeRequests.requestMatchers(LOGIN_URL).permitAll()
+                                                .requestMatchers("/auth/reissue")
+
                         )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(
