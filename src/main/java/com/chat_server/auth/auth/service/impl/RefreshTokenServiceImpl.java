@@ -1,8 +1,8 @@
-package com.chat_server.auth.token.service.impl;
+package com.chat_server.auth.auth.service.impl;
 
 import com.chat_server.auth.redis.RedisProperties;
-import com.chat_server.auth.token.config.TokenConfig;
-import com.chat_server.auth.token.service.RefreshTokenService;
+import com.chat_server.auth.auth.config.TokenConfig;
+import com.chat_server.auth.auth.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -37,10 +37,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         // refresh token을 redis 저장을 시킴
         String refreshTokenPrefix = redisProperties.getRefreshToken();
         String key = refreshTokenPrefix + ":" + userId;
-        long ttlInSeconds = Long.parseLong(tokenConfig.getRefreshToken().getExpiration());
+        long ttlInSeconds = tokenConfig.getRefreshToken().toSeconds();
 
         Duration ttl = Duration.ofSeconds(ttlInSeconds);
         redisTemplate.opsForValue().set(key, refreshToken, ttl);
-    }
 
+    }
 }
