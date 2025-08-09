@@ -33,22 +33,27 @@ public class TokenServiceImpl implements TokenService {
     // todo#3 token 발급 데이터를 뭘 넣어야할 지 고민
     @Override
     public TokenPair generateTokenPair(String userId, String accessTokenJti, String refreshTokenJti) {
-        // token
-        // rsa 방식으로 할 예정, 지금 당장은 HSA 방식이 편하지만, 추 후에 msa 구조로 확장한다고 가정 했을 땐, secret 키가 유출이 되면은 보안의 위험이 있음
+
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime()+ tokenConfig.getAccessToken().toMillis());
 
         Date refreshTokenExpiration = new Date(now.getTime() + tokenConfig.getRefreshToken().toMillis());
 
-        String accessToken = buildToken(userId, accessTokenJti, accessTokenExpiration, rsaKeyProvider.getPrivateKey());
-        String refreshToken = buildToken(userId, refreshTokenJti, refreshTokenExpiration, rsaKeyProvider.getPrivateKey());
+        String accessTokenIss = tokenConfig.getAccessToken().getIss();
+        String refreshTokenIss = tokenConfig.getRefreshToken().getIss();
 
+        PrivateKey rsaPrivateKey = rsaKeyProvider.getPrivateKey();
+
+        String accessToken = buildToken(userId, accessTokenIss,accessTokenJti, accessTokenExpiration, rsaPrivateKey);
+
+        String refreshToken = buildToken(userId,refreshTokenIss, refreshTokenJti, refreshTokenExpiration, rsaPrivateKey);
 
         return TokenPair.of(accessToken, refreshToken,accessTokenExpiration,refreshTokenExpiration);
     }
-    private String buildToken(String subject, String jti, Date expiration, PrivateKey privateKey) {
+    private String buildToken(String subject,String issuer, String jti, Date expiration, PrivateKey privateKey) {
         return Jwts.builder()
                 .setSubject(subject)
+                .setIssuer(issuer)
                 .setIssuedAt(new Date())
                 .claim("jti", jti)
                 .setExpiration(expiration)

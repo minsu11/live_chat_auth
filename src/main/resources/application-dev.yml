@@ -2,7 +2,9 @@ auth:
   token:
     access-token:
       expiration: 10000
+      iss: chat
     refresh-token:
+      iss: chat
       expiration: 10000
   key:
     public-path: classpath:rsa/dev/login_public_key.pem

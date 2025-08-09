@@ -28,7 +28,7 @@ public class TokenConfig {
     @Setter
     public static class AccessToken {
         private long expiration;
-
+        private String iss;
         public long toMillis() {
             return expiration*1000;
         }
@@ -42,6 +42,7 @@ public class TokenConfig {
     @Setter
     public static class RefreshToken {
         private long expiration;
+        private String iss;
 
         public long toMillis() {
             return expiration*1000;
