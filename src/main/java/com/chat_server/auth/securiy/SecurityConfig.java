@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (
                                 authorizeRequests ->
-                                        authorizeRequests.requestMatchers(LOGIN_URL, "/auth/reissue","/test").permitAll()
+                                        authorizeRequests.requestMatchers(LOGIN_URL, "/auth/reissue","/health/test").permitAll()
 
                         )
                 .formLogin(AbstractHttpConfigurer::disable)
