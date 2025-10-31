@@ -28,20 +28,20 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_input_id")
+    @Column(name = "input_id")
     private String userInputId;
 
-    @Column(name = "user_input_password")
+    @Column(name = "input_password")
     private String userInputPassword;
 
-    @Column(name = "user_created_at")
+    @Column(name = "created_at")
     private LocalDateTime userCreatedAt;
 
-    @Column(name="user_uuid")
+    @Column(name="uuid")
     private String userUuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
