@@ -1,6 +1,6 @@
 package com.chat_server.auth.user.entity;
 
-import com.chat_server.auth.user_status.entity.UserStatus;
+import com.chat_server.auth.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +44,7 @@ public class User {
     @Column(name="uuid")
     private String userUuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_status_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name="status")
     private UserStatus userStatus;
 }

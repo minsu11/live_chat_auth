@@ -3,6 +3,7 @@ package com.chat_server.auth.user.repository.impl;
 import com.chat_server.auth.securiy.dto.UserAuthResponse;
 import com.chat_server.auth.user.dto.response.UserUuidResponse;
 import com.chat_server.auth.user.entity.QUser;
+import com.chat_server.auth.user.enums.UserStatus;
 import com.chat_server.auth.user.repository.UserRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -40,7 +41,7 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                                 qUser.userInputPassword
                         ))
                         .where(qUser.userInputId.eq(userId)
-                                .and(qUser.userStatus.userStatusName.eq("활성"))
+                                .and(qUser.userStatus.eq(UserStatus.ACTIVE))
                         ).fetchOne()
         );
     }
@@ -53,7 +54,7 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                                 UserUuidResponse.class,
                                 qUser.userUuid
                         ))
-                        .where(qUser.userInputId.eq(userId).and(qUser.userStatus.userStatusName.eq("활성")))
+                        .where(qUser.userInputId.eq(userId).and(qUser.userStatus.eq(UserStatus.ACTIVE)))
                         .fetchOne()
         );
     }
