@@ -18,7 +18,12 @@ spring:
       test-on-return: true
       test-on-create: true
   profiles:
-    active: dev
+    group:
+      dev:
+        - api
+
+      prod:
+        - api
 
 server:
   port: 9090

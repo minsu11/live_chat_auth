@@ -1,5 +1,7 @@
-package com.chat_server.auth.securiy;
+package com.chat_server.auth.securiy.config;
 
+import com.chat_server.auth.common.properties.ApiProperties;
+import com.chat_server.auth.securiy.UserAuthenticationFilter;
 import com.chat_server.auth.securiy.handler.CustomFailHandler;
 import com.chat_server.auth.securiy.handler.CustomLogoutSuccessHandler;
 import com.chat_server.auth.securiy.handler.CustomSuccessHandler;
@@ -38,28 +40,31 @@ public class SecurityConfig {
     private final UserAuthService userAuthService;
     private final ObjectMapper objectMapper;
     private final AuthService userLoginService;
-    private final String LOGIN_URL = "/api/v1/auth/login";
+    private final ApiProperties apiProperties;
     // security 허용 경로
     // login 경로 및 refresh 경로만 허용
     // 그 외의 경로는 허용하지 않음
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String loginUrl = apiProperties.getCommon() + apiProperties.getLogin();
+        String reissueUrl = apiProperties.getReissue();;
+        String logoutUrl = apiProperties.getCommon() + apiProperties.getLogout();
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests
                         (
                                 authorizeRequests ->
-                                        authorizeRequests.requestMatchers(LOGIN_URL, "/auth/reissue","/minsu/chat").permitAll()
+                                        authorizeRequests.requestMatchers(loginUrl, reissueUrl,"/minsu/chat").permitAll()
 
                         )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(
                         logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
+                        logout.logoutUrl(logoutUrl)
                                 .logoutSuccessHandler(logoutSuccessHandler())
                 );
 
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
-        userAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
+        userAuthenticationFilter.setFilterProcessesUrl(loginUrl);
         userAuthenticationFilter.setAuthenticationManager(userAuthenticationManager(authenticationConfiguration)); // 등록된 manager 사용
 
         userAuthenticationFilter.setAuthenticationSuccessHandler(successHandler());
