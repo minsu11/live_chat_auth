@@ -12,6 +12,8 @@ import com.chat_server.auth.oauth.repository.OAuthAccountRepository;
 import com.chat_server.auth.user.entity.User;
 import com.chat_server.auth.user.enums.LoginTypeEnum;
 import com.chat_server.auth.user.repository.UserRepository;
+import com.chat_server.auth.userprofile.entity.UserProfile;
+import com.chat_server.auth.userprofile.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,10 +23,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -34,8 +38,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final OAuthAccountRepository oauthAccountRepository;
 
+    private final UserProfileRepository userProfileRepository;
+
     @Override
-    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oauth2User = super.loadUser(userRequest);
 
@@ -85,6 +90,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         );
 
         User savedUser = userRepository.save(user);
+
+        UserProfile userProfile = UserProfile.builder()
+                .user(savedUser)
+                .stateMessage("")
+                .build();
+
+        UserProfile saveUserProfile = userProfileRepository.save(userProfile);
 
         OauthAccount oauthAccount = OauthAccount.create(
                 savedUser,

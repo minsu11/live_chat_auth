@@ -37,7 +37,12 @@ out/
 .vscode/
 
 src/main/resources/rsa/**
+<<<<<<< HEAD
 
 .env
 .env.*
 !.env.example
+=======
+.env
+.env.**
+>>>>>>> aab8b0d ([Refact] .gitignore .env 파일 추가)
