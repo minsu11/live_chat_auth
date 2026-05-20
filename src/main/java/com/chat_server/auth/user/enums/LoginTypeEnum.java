@@ -1,6 +1,6 @@
 package com.chat_server.auth.user.enums;
 
-public enum LoginType
+public enum LoginTypeEnum
 {
     LOCAL,
     OAUTH

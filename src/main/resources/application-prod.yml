@@ -15,3 +15,7 @@ spring:
       port: 6379
       host: localhost
       password: chocorosa@12
+app:
+  front-url: https://chatalk.store
+  cookie:
+    secure: true

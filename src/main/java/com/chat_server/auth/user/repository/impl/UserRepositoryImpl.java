@@ -3,6 +3,7 @@ package com.chat_server.auth.user.repository.impl;
 import com.chat_server.auth.securiy.dto.UserAuthResponse;
 import com.chat_server.auth.user.dto.response.UserUuidResponse;
 import com.chat_server.auth.user.entity.QUser;
+import com.chat_server.auth.user.enums.LoginTypeEnum;
 import com.chat_server.auth.user.enums.UserStatus;
 import com.chat_server.auth.user.repository.UserRepositoryCustom;
 import com.querydsl.core.types.Projections;
@@ -31,8 +32,6 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
 
     @Override
     public Optional<UserAuthResponse> findByUserName(String userId) {
-
-
         return Optional.ofNullable(
                 from(qUser)
                         .select(Projections.constructor(
@@ -40,9 +39,12 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                                 qUser.userInputId,
                                 qUser.userInputPassword
                         ))
-                        .where(qUser.userInputId.eq(userId)
-                                .and(qUser.userStatus.eq(UserStatus.ACTIVE))
-                        ).fetchOne()
+                        .where(
+                                qUser.userInputId.eq(userId)
+                                        .and(qUser.userStatus.eq(UserStatus.ACTIVE))
+                                        .and(qUser.loginType.name.eq(LoginTypeEnum.LOCAL.name()))
+                        )
+                        .fetchOne()
         );
     }
 

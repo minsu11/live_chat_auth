@@ -1,6 +1,6 @@
 package com.chat_server.auth.user.entity;
 
-import com.chat_server.auth.user.enums.LoginType;
+import com.chat_server.auth.logintype.entity.LoginType;
 import com.chat_server.auth.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,14 +62,15 @@ public class User {
     @Column(name = "login_lasted_at")
     private LocalDateTime loginLastedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "login_type", nullable = false, length = 20)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "login_type_id")
     private LoginType loginType;
 
     public static User createOAuthUser(
             String inputId,
             String name,
-            String nickname
+            String nickname,
+            LoginType loginType
     ) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -84,17 +85,10 @@ public class User {
                 .userStatus(UserStatus.ACTIVE)
                 .userCreatedAt(now)
                 .loginLastedAt(now)
-                .loginType(LoginType.OAUTH)
+                .loginType(loginType)
                 .build();
     }
 
-    public boolean isLocalUser() {
-        return this.loginType == LoginType.LOCAL;
-    }
-
-    public boolean isOAuthUser() {
-        return this.loginType == LoginType.OAUTH;
-    }
 
     public void updateLoginLastedAt() {
         this.loginLastedAt = LocalDateTime.now();

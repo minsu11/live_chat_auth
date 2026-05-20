@@ -1,4 +1,17 @@
 package com.chat_server.auth.oauth.info;
+import com.chat_server.auth.oauth.enums.OAuthProvider;
 
-public class OAuth2UserInfo {
+public interface OAuth2UserInfo {
+
+    OAuthProvider getProvider();
+
+    String getProviderUserId();
+
+    String getEmail();
+
+    String getName();
+
+    String getNickname();
+
+    String getProfileImageUrl();
 }

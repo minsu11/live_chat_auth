@@ -79,34 +79,60 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse reissueToken(String accessToken) {
-
         Claims claims = tokenService.extractClaimsAllowExpired(accessToken);
 
-        String username = claims.getSubject();
-        // todo db 조회가 아닌 user id 캐싱해서 가져올 예쩡
-        UserUuidResponse userUuidResponse = userService.getUserUuid(username);
+        String userUuid = claims.getSubject();
 
-        String key = redisProperties.getRefreshToken() +":" + username;
-        String refreshToken =(String) redisTemplate.opsForValue().get(key);
+        String key = redisProperties.getRefreshToken() + ":" + userUuid;
+        String refreshToken = (String) redisTemplate.opsForValue().get(key);
 
-        if(refreshToken == null) {
-            // todo 임시
+        if (refreshToken == null) {
             throw new RuntimeException("refresh token is null");
         }
 
         tokenService.validToken(refreshToken);
 
-        // 발급
         String accessTokenUuid = UUID.randomUUID().toString();
         String refreshTokenUuid = UUID.randomUUID().toString();
 
-        TokenPair tokenPair =tokenService.generateTokenPair(accessTokenUuid, refreshTokenUuid, userUuidResponse.uuid());
-        refreshTokenService.saveRefreshToken(tokenPair.refreshToken(),username);
+        TokenPair tokenPair = tokenService.generateTokenPair(
+                userUuid,
+                accessTokenUuid,
+                refreshTokenUuid
+        );
 
-        return new TokenResponse(tokenPair.accessToken(), tokenPair.accessTokenExpiration());
+        refreshTokenService.saveRefreshToken(
+                tokenPair.refreshToken(),
+                userUuid
+        );
+
+        return new TokenResponse(
+                tokenPair.accessToken(),
+                tokenPair.accessTokenExpiration()
+        );
     }
 
+    @Override
+    public TokenResponse issueTokenByUserUuid(String userUuid) {
+        String accessTokenUuid = UUID.randomUUID().toString();
+        String refreshTokenUuid = UUID.randomUUID().toString();
 
+        TokenPair tokenPair = tokenService.generateTokenPair(
+                userUuid,
+                accessTokenUuid,
+                refreshTokenUuid
+        );
+
+        refreshTokenService.saveRefreshToken(
+                tokenPair.refreshToken(),
+                userUuid
+        );
+
+        return new TokenResponse(
+                tokenPair.accessToken(),
+                tokenPair.accessTokenExpiration()
+        );
+    }
 
 
 }

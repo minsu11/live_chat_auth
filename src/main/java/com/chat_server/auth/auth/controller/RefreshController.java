@@ -17,13 +17,13 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 
-@RestController("auth")
+@RestController("${api.common}")
 @RequiredArgsConstructor
 public class RefreshController {
     private final AuthService authService;
 
     // 재발급 로직
-    @PostMapping("/reissue")
+    @PostMapping("${api.reissue}")
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
         // cookie 데이터
         String accessToken = CookieUtil.getCookie(request, "accessToken");
