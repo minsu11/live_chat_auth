@@ -21,5 +21,5 @@ public interface AuthService {
     TokenResponse successLogin(PrincipalUser principal);
 
     TokenResponse reissueToken(String accessToken);
-
+    TokenResponse issueTokenByUserUuid(String userUuid);
 }

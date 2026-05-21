@@ -1,5 +1,10 @@
-package com.chat_server.auth.securiy;
+package com.chat_server.auth.securiy.config;
 
+import com.chat_server.auth.common.properties.ApiProperties;
+import com.chat_server.auth.oauth.handler.OAuth2FailureHandler;
+import com.chat_server.auth.oauth.handler.OAuth2SuccessHandler;
+import com.chat_server.auth.oauth.service.CustomOAuth2UserService;
+import com.chat_server.auth.securiy.UserAuthenticationFilter;
 import com.chat_server.auth.securiy.handler.CustomFailHandler;
 import com.chat_server.auth.securiy.handler.CustomLogoutSuccessHandler;
 import com.chat_server.auth.securiy.handler.CustomSuccessHandler;
@@ -38,33 +43,62 @@ public class SecurityConfig {
     private final UserAuthService userAuthService;
     private final ObjectMapper objectMapper;
     private final AuthService userLoginService;
-    private final String LOGIN_URL = "/api/v1/auth/login";
+    private final ApiProperties apiProperties;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
+
     // security 허용 경로
     // login 경로 및 refresh 경로만 허용
     // 그 외의 경로는 허용하지 않음
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String loginUrl = apiProperties.getCommon() + apiProperties.getLogin();
+        String reissueUrl = apiProperties.getReissue();;
+        String logoutUrl = apiProperties.getCommon() + apiProperties.getLogout();
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests
                         (
                                 authorizeRequests ->
-                                        authorizeRequests.requestMatchers(LOGIN_URL, "/auth/reissue","/minsu/chat").permitAll()
+                                        authorizeRequests.requestMatchers(
+                                                loginUrl,
+                                                reissueUrl,
+                                                "/minsu/chat",
+                                                "/oauth2/**",
+                                                "/login/oauth2/**"
+                                        ).permitAll()
+                                                .anyRequest().denyAll()
+
 
                         )
                 .formLogin(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth2 ->
+                        oauth2
+                                .userInfoEndpoint(userInfo ->
+                                        userInfo.userService(customOAuth2UserService)
+                                )
+                                .successHandler(oAuth2SuccessHandler)
+                                .failureHandler(oAuth2FailureHandler)
+                )
                 .logout(
                         logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
+                        logout.logoutUrl(logoutUrl)
                                 .logoutSuccessHandler(logoutSuccessHandler())
                 );
 
-        UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(passwordEncoder());
-        userAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
-        userAuthenticationFilter.setAuthenticationManager(userAuthenticationManager(authenticationConfiguration)); // 등록된 manager 사용
+        UserAuthenticationFilter userAuthenticationFilter =
+                new UserAuthenticationFilter(passwordEncoder());
+
+        userAuthenticationFilter.setFilterProcessesUrl(loginUrl);
+        userAuthenticationFilter.setAuthenticationManager(
+                userAuthenticationManager(authenticationConfiguration)
+        );
 
         userAuthenticationFilter.setAuthenticationSuccessHandler(successHandler());
         userAuthenticationFilter.setAuthenticationFailureHandler(failHandler());
+
         http.addFilterBefore(userAuthenticationFilter, UserAuthenticationFilter.class);
+
         return http.build();
     }
 

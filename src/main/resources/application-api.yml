@@ -1,0 +1,6 @@
+api:
+  common: "/api/v1"
+  reissue: "/auth/reissue"
+  login: "/auth/login"
+  logout: "/auth/logout"
+

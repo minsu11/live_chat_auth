@@ -37,3 +37,7 @@ out/
 .vscode/
 
 src/main/resources/rsa/**
+
+.env
+.env.*
+!.env.example

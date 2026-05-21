@@ -42,8 +42,6 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         ObjectMapper mapper = new ObjectMapper();
         try {
             LoginRequest loginRequest = mapper.readValue(request.getInputStream(), LoginRequest.class);
-            log.info("Attempting to authenticate user: " + loginRequest.getUserId());
-            log.info("Attempting to authenticate password: " + loginRequest.getPassword());
             PrincipalUser principalUser = new PrincipalUser(loginRequest.getUserId(), loginRequest.getPassword());
             return new UsernamePasswordAuthenticationToken(principalUser,principalUser.getPassword(),principalUser.getAuthorities());
         } catch (IOException e) {
