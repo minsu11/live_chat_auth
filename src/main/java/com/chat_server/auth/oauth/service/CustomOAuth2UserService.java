@@ -79,9 +79,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String name = resolveName(userInfo);
         String nickname = resolveNickname(userInfo);
 
-        LoginType loginType = loginTypeRepository.findByName(LoginTypeEnum.OAUTH.name())
-                .orElseThrow(()-> new LoginTypeNotFountException("login type not found"));
-
+        LoginType loginType = getOrCreateOAuthLoginType();
         User user = User.createOAuthUser(
                 inputId,
                 name,
@@ -148,5 +146,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         return trimmed.substring(0, maxLength);
+    }
+
+    private LoginType getOrCreateOAuthLoginType() {
+        return loginTypeRepository.findByName(LoginTypeEnum.OAUTH.name())
+                .orElseGet(() -> loginTypeRepository.save(
+                        LoginType.create(LoginTypeEnum.OAUTH.name())
+                ));
     }
 }

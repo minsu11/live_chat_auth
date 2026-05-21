@@ -26,5 +26,11 @@ public class LoginType {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    public static LoginType create(String name) {
+        LoginType loginType = new LoginType();
+        loginType.name = name;
+        loginType.createdAt = LocalDateTime.now();
+        return loginType;
+    }
 
 }
