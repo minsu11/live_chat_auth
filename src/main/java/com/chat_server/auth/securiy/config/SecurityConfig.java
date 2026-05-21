@@ -67,7 +67,7 @@ public class SecurityConfig {
                                                 "/oauth2/**",
                                                 "/login/oauth2/**"
                                         ).permitAll()
-                                                .anyRequest().permitAll()
+                                                .anyRequest().denyAll()
 
 
                         )
