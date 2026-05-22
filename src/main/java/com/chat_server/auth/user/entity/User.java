@@ -10,7 +10,13 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "user",
+        uniqueConstraints = {
+        @UniqueConstraint(name = "uk_user_input_id", columnNames = "input_id"),
+                @UniqueConstraint(name = "uk_user_friend_code", columnNames = "friend_code"),
+                @UniqueConstraint(name = "uk_user_uuid", columnNames = "uuid")
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -52,6 +58,9 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime userCreatedAt;
 
+    @Column(name = "friend_code", nullable = false, length = 20, unique = true)
+    private String friendCode;
+
     @Column(name = "uuid", nullable = false, length = 36)
     private String userUuid;
 
@@ -70,7 +79,8 @@ public class User {
             String inputId,
             String name,
             String nickname,
-            LoginType loginType
+            LoginType loginType,
+            String friendCode
     ) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -79,6 +89,7 @@ public class User {
                 .userInputId(limit(inputId, 30))
                 .userInputPassword(null)
                 .age(null)
+                .friendCode(friendCode)
                 .name(limitOrDefault(name, 30, "소셜사용자"))
                 .nickname(limitOrDefault(nickname, 30, "소셜사용자"))
                 .userUuid(UUID.randomUUID().toString())
