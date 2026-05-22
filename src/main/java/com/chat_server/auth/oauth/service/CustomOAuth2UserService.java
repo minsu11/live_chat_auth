@@ -1,5 +1,6 @@
 package com.chat_server.auth.oauth.service;
 
+import com.chat_server.auth.common.generator.FriendCodeGenerator;
 import com.chat_server.auth.logintype.entity.LoginType;
 import com.chat_server.auth.logintype.exception.LoginTypeNotFountException;
 import com.chat_server.auth.logintype.repository.LoginTypeRepository;
@@ -39,6 +40,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final OAuthAccountRepository oauthAccountRepository;
 
     private final UserProfileRepository userProfileRepository;
+
+    private final FriendCodeGenerator friendCodeGenerator;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
@@ -80,11 +83,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String nickname = resolveNickname(userInfo);
 
         LoginType loginType = getOrCreateOAuthLoginType();
+        String friendCode= friendCodeGenerator.generateUniqueFriendCode();;
         User user = User.createOAuthUser(
                 inputId,
                 name,
                 nickname,
-                loginType
+                loginType,
+                friendCode
+
         );
 
         User savedUser = userRepository.save(user);

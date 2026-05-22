@@ -16,5 +16,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
     boolean existsByUserInputId(String inputId);
-
+    boolean existsByFriendCode(String friendCode);
 }
