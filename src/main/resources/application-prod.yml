@@ -25,7 +25,7 @@ spring:
             scope:
               - profile
               - email
-            redirect-uri: "https://chatalk/a/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://chatalk.store/a/login/oauth2/code/{registrationId}"
 
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
